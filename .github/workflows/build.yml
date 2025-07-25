@@ -23,31 +23,11 @@ jobs:
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v3
       
-    - name: Create Gradle Wrapper (if missing)
-      run: |
-        if [ ! -f "./gradlew" ]; then
-          echo "Gradle wrapper not found, creating it..."
-          gradle wrapper --gradle-version 8.1.1
-        else
-          echo "Gradle wrapper found"
-        fi
-        
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
-      
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Build with Gradle (direct)
+      run: gradle build
       
     - name: Upload JAR artifact
       uses: actions/upload-artifact@v4
       with:
         name: mca-companion-mod
         path: build/libs/*.jar
-       - name: Create Gradle Wrapper (if missing)
-  run: |
-    if [ ! -f "./gradlew" ]; then
-      echo "Gradle wrapper not found, creating it..."
-      gradle wrapper --gradle-version 8.1.1
-    else
-      echo "Gradle wrapper found"
-    fi
