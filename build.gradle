@@ -3,19 +3,75 @@ plugins {
     id 'java'
 }
 
+repositories {
+    // These repositories are required for Forge and Minecraft development
+    maven {
+        name = 'MinecraftForge'
+        url = 'https://maven.minecraftforge.net'
+    }
+    maven {
+        name = 'Mojang'
+        url = 'https://libraries.minecraft.net'
+    }
+    mavenCentral()
+}
+
 group = 'com.mca'
 version = '1.0'
 archivesBaseName = 'mca_companion'
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
 minecraft {
     mappings channel: 'official', version: '1.20.1'
+    
     runs {
         client {
             workingDirectory project.file('run')
+            
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            
+            mods {
+                mca_companion {
+                    source sourceSets.main
+                }
+            }
+        }
+        
+        server {
+            workingDirectory project.file('run')
+            
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            
+            mods {
+                mca_companion {
+                    source sourceSets.main
+                }
+            }
         }
     }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+    
+    // Add any additional dependencies here
+}
+
+// Example for how to get properties into the manifest for reading at runtime.
+jar {
+    manifest {
+        attributes([
+            "Specification-Title"     : "mca_companion",
+            "Specification-Vendor"    : "YourName",
+            "Specification-Version"   : "1",
+            "Implementation-Title"    : project.name,
+            "Implementation-Version"  : project.jar.archiveVersion,
+            "Implementation-Vendor"   : "YourName",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
